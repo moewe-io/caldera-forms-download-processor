@@ -1,7 +1,7 @@
 <?php
 /*
   Plugin Name: Caldera Forms: Download Processor
-  Plugin URI: https://www.moewe.io
+  Plugin URI: https://github.com/moewe-io/caldera-forms-download-processor
   Description: Processor to provide a download on form submission
   Author: MOEWE
   Author URI: https://www.moewe.io
