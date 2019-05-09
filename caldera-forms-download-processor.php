@@ -5,7 +5,7 @@
   Description: Processor to provide a download on form submission
   Author: MOEWE
   Author URI: https://www.moewe.io
-  Version: 1.0.0
+  Version: 1.1.0
   Text Domain: caldera-forms-download-processor
 */
 
@@ -17,6 +17,8 @@ class MOEWE_Caldera_Forms_Download_Processor {
 
         add_action('wp_ajax_nopriv_caldera_download_file', [$this, 'provide_download']);
         add_action('wp_ajax_caldera_download_file', [$this, 'provide_download']);
+
+        add_shortcode('caldera_download_url', [$this, 'render_shortcode_download_url']);
     }
 
     function register_download_processor($processors) {
@@ -59,6 +61,7 @@ class MOEWE_Caldera_Forms_Download_Processor {
             $value = __("Error. Please contact us", 'caldera-forms-download-processor');
         }
         Caldera_Forms::set_field_data($config['download_file_field'], $value, $form, $entry_id);
+        Caldera_Forms::set_field_data($config['download_file_token_field'], $token, $form, $entry_id);
     }
 
     function provide_download() {
@@ -91,6 +94,25 @@ class MOEWE_Caldera_Forms_Download_Processor {
         $fp = fopen($file, 'rb');
         fpassthru($fp);
         wp_die();
+    }
+
+    function render_shortcode_download_url($atts, $content = "Download now") {
+        $atts = shortcode_atts(array(
+            'class'  => '',
+            'target' => '_self',
+        ), $atts);
+
+        $token = isset($_GET['download_token']) ? $_GET['download_token'] : false;
+
+        if (!$token) {
+            return __('Missing required download url', 'caldera-forms-download-processor');
+        }
+        $download_url = add_query_arg(array(
+            'action' => 'caldera_download_file',
+            'token'  => $token,
+        ), admin_url('admin-ajax.php'));
+
+        return '<a href="' . esc_attr($download_url) . '" target="' . esc_attr($atts['target']) . '" class="' . esc_attr($atts['class']) . '">' . do_shortcode($content) . '</a>';
     }
 }
 

@@ -24,5 +24,12 @@ echo Caldera_Forms_Processor_UI::config_fields(
             'required' => true,
             'magic'    => false,
         ),
+        array(
+            'id'       => 'download_file_token_field',
+            'label'    => __('Field id for token', 'caldera-forms-download-processor'),
+            'type'     => 'text',
+            'required' => true,
+            'magic'    => false,
+        ),
     )
 );
